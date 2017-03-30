@@ -7,54 +7,57 @@
 
 
 
-void NewStack(struct stack_node **rootP)
+struct stack *NewStack(void)
 {
-	*rootP = NULL;
+    struct stack *stackP;
+
+    stackP = GetBlock(sizeof(struct stack));
+    stackP->head = NULL;
+    stackP->size = 0;
 }
 
-STACKTYPE Pop(struct stack_node **rootP)
+void *Pop(struct stack *stackP)
 {
-    STACKTYPE temp;
-    struct stack_node *tempP;
-
-    if (StackSize(*rootP) == 0) Error("no element in the stack.\n");
-    temp = (*rootP)->value;
-    tempP = (*rootP)->next;
-    FreeBlock(*rootP);
-    *rootP = tempP;
-    return temp;
-}
-
-void Push(struct stack_node **rootP, STACKTYPE input)
-{
+    void *value;
     struct stack_node *temp;
 
-    temp = GetBlock(sizeof(struct stack_node));
-    temp->value = input;
-    temp->next = *rootP;
-    *rootP = temp;
-}
-
-STACKTYPE Top(struct stack_node **rootP)
-{
-	if (StackSize(*rootP) == 0) Error("No element.\n");
-    return (*rootP)->value;
-}
-
-int StackSize(struct stack_node *root)
-{
-    int size = 0;
-
-    while (root != NULL) {
-        size++;
-        root = root->next;
+    if (!StackSize(stackP)) Error("no element in the stack.\n");
+    else {
+        value = stackP->head->value;
+        stackP->size--;
+        temp = stackP->head->next;
+        free(stackP->head);
+        stackP->head = temp;
+        return value;
     }
-    return size;
 }
 
-void DestroyStack(struct stack_node **rootP)
+void Push(struct stack *stackP, void *input)
 {
-    while (*rootP != NULL) Pop(rootP);
+    struct stack_node *new_node;
+
+    new_node = GetBlock(sizeof(struct stack_node));
+    new_node->value = input;
+    new_node->next = stackP->head;
+    stackP->head = new_node;
+    stackP->size++;
+}
+
+void *Top(struct stack *stackP)
+{
+    if (!StackSize(stackP)) Error("No element.\n");
+    return stackP->head->value;
+}
+
+int StackSize(struct stack *stackP)
+{
+    return stackP->size;
+}
+
+
+void DestroyStack(struct stack *stackP)
+{
+    while (StackSize(stackP)) Pop(stackP);
 }
 
 
