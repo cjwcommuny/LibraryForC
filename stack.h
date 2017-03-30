@@ -3,18 +3,21 @@
 #ifndef _stack_h
 #define _stack_h
 
-#define STACKTYPE char *
-
 struct stack_node {
     struct stack_node *next;
-    STACKTYPE value;
+    void *value;
 };
 
-void NewStack(struct stack_node **rootP);
-STACKTYPE Pop(struct stack_node **rootP); 
-void Push(struct stack_node **rootP, STACKTYPE input);
-STACKTYPE Top(struct stack_node **rootP);
-int StackSize(struct stack_node *root);
-void DestroyStack(struct stack_node **rootP);
+struct stack {
+    struct stack_node *head;
+    int size;
+};
+
+struct stack *NewStack(void);
+void *Pop(struct stack *stackP); 
+void Push(struct stack *stackP, void *input);
+void *Top(struct stack *stackP);
+int StackSize(struct stack *stackP);
+void DestroyStack(struct stack *stackP);
 
 #endif
