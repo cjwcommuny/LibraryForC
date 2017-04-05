@@ -52,6 +52,22 @@ void list_delete(struct llist *list)
     list->head = temp;
 }
 
+void list_insert(struct llist *list, void *value, int (*Compare)(void *op1, void *op2))
+{
+    struct node **nodeP;
+    struct node *newnode;
+
+    nodeP = &list->head;
+    while (*nodeP) {
+        if (Compare(value, (*nodeP)->value) <= 0) break;
+        nodeP = &(*nodeP)->next;
+    }
+    newnode = GetBlock(sizeof(struct node));
+    newnode->value = value;
+    newnode->next = *nodeP;
+    *nodeP = newnode;
+}
+
 void list_destory(struct llist *list)
 {
     while (list->head) {

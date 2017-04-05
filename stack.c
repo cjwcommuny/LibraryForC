@@ -54,7 +54,6 @@ int StackSize(struct stack *stackP)
     return stackP->size;
 }
 
-
 void DestroyStack(struct stack *stackP)
 {
     while (StackSize(stackP)) Pop(stackP);
